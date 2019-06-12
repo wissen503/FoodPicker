@@ -2,6 +2,7 @@
 using Entity;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -32,6 +33,10 @@ namespace FoodPicker.Controllers
 
         public ActionResult AddFood()
         {
+            if (_uw.restRep.GetAll().Count == 0)
+            {
+                return RedirectToAction("AddRestaurant", "Restaurant");
+            }
             IEnumerable<Restaurant> restaurant = _uw.restRep.GetAll();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {
@@ -51,8 +56,16 @@ namespace FoodPicker.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddFood(Food food)
+        public ActionResult AddFood(Food food, HttpPostedFileBase ImageFile)
         {
+            if (ImageFile != null && ImageFile.ContentLength != 0)
+            {
+                var path = Server.MapPath("/Content/Uploads/");
+                var filename = ImageFile.FileName;
+                ImageFile.SaveAs(path + filename);
+                food.ImageURL = filename;
+            }
+
             if (ModelState.IsValid) //checks if the model is valid
             {
                 _uw.foodRep.Create(food); //Add

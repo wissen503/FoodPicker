@@ -3,7 +3,7 @@ namespace DAL.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class setup : DbMigration
+    public partial class a : DbMigration
     {
         public override void Up()
         {
@@ -16,6 +16,8 @@ namespace DAL.Migrations
                         Price = c.Decimal(nullable: false, precision: 18, scale: 2),
                         IsHealty = c.Boolean(nullable: false),
                         FoodType = c.Int(nullable: false),
+                        ImgUrl = c.String(),
+                        ImgFile = c.String(),
                         RestaurantId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)

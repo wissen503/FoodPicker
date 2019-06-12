@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Entity
 {
@@ -12,6 +13,7 @@ namespace Entity
         public decimal Price { get; set; }
         public bool IsHealty { get; set; }
         public FoodType FoodType { get; set; }
+        public string ImageURL { get; set; }
 
         public int RestaurantId { get; set; }
         //public string UserId { get; set; }
