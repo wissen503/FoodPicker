@@ -37,6 +37,7 @@ namespace FoodPicker.Controllers
             {
                 return RedirectToAction("AddRestaurant", "Restaurant");
             }
+
             IEnumerable<Restaurant> restaurant = _uw.restRep.GetAll();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {

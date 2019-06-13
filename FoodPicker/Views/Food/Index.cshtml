@@ -5,6 +5,12 @@
     ViewBag.Title = "Index";
 }
 
+@*<style>
+        .modal-content{
+            height:300px;
+            width:300px;
+        }
+    </style>*@
 <div class="widget has-shadow">
     <div class="widget-header bordered no-actions d-flex align-items-center">
         <h4>Food List</h4>
@@ -26,7 +32,26 @@
                     @foreach (var food in Model)
                     {
                         <tr>
-                            <td>@food.FoodName</td>
+                            <td>
+                                @if (food.ImageURL != null)
+                                {
+                                    <a data-toggle="modal" data-target="#myModal-@food.Id">
+                                        <div style="font-size: 24px;">
+                                            <i class="la la-camera fa-lg"></i>
+                                        </div>
+                                    </a>
+                                    <div class="modal" id="myModal-@food.Id">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <img src="/Content/Uploads/@food.ImageURL" height="170" width="170" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @food.FoodName
+                            </td>
                             <td>@food.Restaurant.RestaurantName</td>
                             <td>@food.Price</td>
                             <td>
