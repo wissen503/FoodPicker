@@ -65,6 +65,8 @@ namespace FoodPicker.Controllers
                 var filename = ImageFile.FileName;
                 ImageFile.SaveAs(path + filename);
                 food.ImageURL = filename;
+
+                ViewBag.UploadedImage = ImageFile.FileName;
             }
 
             if (ModelState.IsValid) //checks if the model is valid
