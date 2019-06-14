@@ -16,12 +16,23 @@ namespace BLL
             _db = db;
         }
 
-        public Food RandomFood(List<Food> foodList)
+        //BERKCAN-EDIT-BEGIN
+        public string RandomFood()
         {
+            List<Food> foodList = _db.Foods.ToList();
             Random rnd = new Random();
             Food food = foodList.ElementAt(rnd.Next(foodList.Count()));
-            return food;
+            return food.FoodName;
         }
+        //
+        public string HealtyRandomFood()
+        {
+            List<Food> healthyFood = _db.Foods.Where(x => x.IsHealty == true).ToList();
+            Random rnd = new Random();
+            Food food = healthyFood.ElementAt(rnd.Next(healthyFood.Count()));
+            return food.FoodName;
+        }
+        //BERKCAN-EDIT-FINISH
 
         //public Food AllRandomFood(List<Food> foodList)
         //{
