@@ -1,5 +1,7 @@
 ﻿using BLL;
+using DAL;
 using Entity;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,15 +13,21 @@ namespace FoodPicker.Controllers
 {
     public class FoodController : Controller
     {
+       // ApplicationDbContext db = new ApplicationDbContext();
         private readonly UnitOfWork _uw;
         public FoodController()
         {
             _uw = new UnitOfWork();
         }
 
+       
         public ActionResult Index()
         {
+            bool es = User.Identity.IsAuthenticated;
+
             List<Food> foodList = _uw.foodRep.GetAll();
+            string strUseId = User.Identity.GetUserId();
+            foodList = _uw.db.Foods.Where(x => x.ApplicationUserId == strUseId).ToList();
             return View(foodList);
         }
 
@@ -30,7 +38,7 @@ namespace FoodPicker.Controllers
 
             return RedirectToAction("Index", "Food");
         }
-
+        [Authorize]
         public ActionResult AddFood()
         {
             if (_uw.restRep.GetAll().Count == 0)
@@ -71,6 +79,8 @@ namespace FoodPicker.Controllers
 
             if (ModelState.IsValid) //checks if the model is valid
             {
+                string userId = User.Identity.GetUserId();
+                food.ApplicationUserId = userId;
                 _uw.foodRep.Create(food); //Add
                 _uw.Save();
 

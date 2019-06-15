@@ -13,6 +13,8 @@ namespace Entity
         //public string UserId { get; set; }
 
         public virtual ICollection<Food> Foods { get; set; }
+        public string ApplicationUserId { get; set; }
+        public  ApplicationUser ApplicationUser { get; set; }
         //public virtual User User { get; set; }
     }
 }
