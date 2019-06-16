@@ -5,7 +5,7 @@
 
     <div class="widget has-shadow">
         <div class="widget-header bordered no-actions d-flex align-items-center">
-            <h4>Food List</h4>
+            <h4>Don't waste your precious time. We picked your food!</h4>
         </div>
         <div class="widget-body">
             <div class="table-responsive">
@@ -26,9 +26,7 @@
                                     @if (ViewBag.RandomFood.ImageURL != null)
                                     {
                                         <a data-toggle="modal" data-target="#myModal-@ViewBag.RandomFood.Id">
-                                            <div style="font-size: 24px;">
-                                                <i class="la la-camera fa-lg"></i>
-                                            </div>
+                                            <i class="la la-camera la-lg"></i>
                                         </a>
                                         <div class="modal" id="myModal-@ViewBag.RandomFood.Id">
                                             <div class="modal-dialog modal-dialog-centered">

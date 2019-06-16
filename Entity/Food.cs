@@ -26,6 +26,16 @@ namespace Entity
         Hamburger,
         Pizza,
         Döner,
-        Kebap
+        Kebap,
+        Balık,
+        Pasta,
+        Kumpir,
+        Et,
+        Kahvaltı,
+        Cafe,
+        Çin,
+        Japon,
+        Börek,
+        Tavuk
     }
 }
