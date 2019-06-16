@@ -1,10 +1,8 @@
 ﻿using BLL;
-using DAL;
 using Entity;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,21 +11,22 @@ namespace FoodPicker.Controllers
 {
     public class FoodController : Controller
     {
-       // ApplicationDbContext db = new ApplicationDbContext();
         private readonly UnitOfWork _uw;
         public FoodController()
         {
             _uw = new UnitOfWork();
         }
 
-       
+
         public ActionResult Index()
         {
             bool es = User.Identity.IsAuthenticated;
 
             List<Food> foodList = _uw.foodRep.GetAll();
-            string strUseId = User.Identity.GetUserId();
-            foodList = _uw.db.Foods.Where(x => x.ApplicationUserId == strUseId).ToList();
+
+            string strUserId = User.Identity.GetUserId();
+            foodList = _uw.db.Foods.Where(x => x.ApplicationUserId == strUserId).ToList();
+
             return View(foodList);
         }
 
@@ -38,15 +37,18 @@ namespace FoodPicker.Controllers
 
             return RedirectToAction("Index", "Food");
         }
+
         [Authorize]
         public ActionResult AddFood()
         {
-            if (_uw.restRep.GetAll().Count == 0)
+            string strUserId = User.Identity.GetUserId();
+            if (/*_uw.restRep.GetAll().Count == 0 && */ _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).Count() == 0)
             {
                 return RedirectToAction("AddRestaurant", "Restaurant");
             }
 
-            IEnumerable<Restaurant> restaurant = _uw.restRep.GetAll();
+            //IEnumerable<Restaurant> restaurant = _uw.restRep.GetAll();            
+            IEnumerable<Restaurant> restaurant = _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).ToList();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {
                 Text = x.RestaurantName,
@@ -57,10 +59,10 @@ namespace FoodPicker.Controllers
             ViewBag.foodTypes = new SelectList(Enum.GetValues(typeof(FoodType))
                 .OfType<Enum>()
                 .Select(x => new SelectListItem
-            {
-                Text = Enum.GetName(typeof(FoodType), x),
-                Value = (Convert.ToInt32(x)).ToString()
-            }), "Value", "Text");
+                {
+                    Text = Enum.GetName(typeof(FoodType), x),
+                    Value = (Convert.ToInt32(x)).ToString()
+                }), "Value", "Text");
 
             return View();
         }
@@ -81,6 +83,7 @@ namespace FoodPicker.Controllers
             {
                 string userId = User.Identity.GetUserId();
                 food.ApplicationUserId = userId;
+
                 _uw.foodRep.Create(food); //Add
                 _uw.Save();
 
@@ -88,7 +91,9 @@ namespace FoodPicker.Controllers
             }
 
             //We stil need DropDownList so we keep this here as the 
-            List<Restaurant> restaurant = _uw.restRep.GetAll();
+            //List<Restaurant> restaurant = _uw.restRep.GetAll();
+            string strUserId = User.Identity.GetUserId();
+            IEnumerable<Restaurant> restaurant = _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).ToList();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {
                 Text = x.RestaurantName,

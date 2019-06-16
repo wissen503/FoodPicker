@@ -1,9 +1,8 @@
 ﻿using BLL;
 using Entity;
-using System;
+using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FoodPicker.Controllers
@@ -18,10 +17,17 @@ namespace FoodPicker.Controllers
 
         public ActionResult Index()
         {
+            bool es = User.Identity.IsAuthenticated;
+
             List<Restaurant> restaurantList = _uw.restRep.GetAll();
+
+            string strUserId = User.Identity.GetUserId();
+            restaurantList = _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).ToList();
+
             return View(restaurantList);
         }
 
+        [Authorize]
         public ActionResult AddRestaurant()
         {
             return View();
@@ -30,7 +36,10 @@ namespace FoodPicker.Controllers
         public ActionResult AddRestaurant(Restaurant restaurant)
         {
             if (ModelState.IsValid)
-            { //vlidlik nullable lık mı. değilse ayarla
+            { //validlik nullable mı. değilse ayarla
+                string userId = User.Identity.GetUserId();
+                restaurant.ApplicationUserId = userId;
+
                 _uw.restRep.Create(restaurant);
                 _uw.Save();
 

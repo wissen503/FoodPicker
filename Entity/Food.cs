@@ -16,12 +16,10 @@ namespace Entity
         public string ImageURL { get; set; }
 
         public int RestaurantId { get; set; }
-        //public string UserId { get; set; }
         public string  ApplicationUserId { get; set; }
+
         public ApplicationUser ApplicationUser { get; set; }
         public virtual Restaurant Restaurant { get; set; }
-        //public virtual User User { get; set; }
-        //public virtual ICollection<IdentityUser> Users { get; set; }
     }
     public enum FoodType
     {

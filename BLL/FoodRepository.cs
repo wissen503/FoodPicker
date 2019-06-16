@@ -3,8 +3,6 @@ using Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -16,23 +14,21 @@ namespace BLL
             _db = db;
         }
 
-        //BERKCAN-EDIT-BEGIN
-        public string RandomFood()
+        public Food RandomFood()
         {
             List<Food> foodList = _db.Foods.ToList();
             Random rnd = new Random();
             Food food = foodList.ElementAt(rnd.Next(foodList.Count()));
-            return food.FoodName;
+            return food;
         }
         //
-        public string HealtyRandomFood()
+        public Food HealtyRandomFood()
         {
             List<Food> healthyFood = _db.Foods.Where(x => x.IsHealty == true).ToList();
             Random rnd = new Random();
             Food food = healthyFood.ElementAt(rnd.Next(healthyFood.Count()));
-            return food.FoodName;
+            return food;
         }
-        //BERKCAN-EDIT-FINISH
 
         //public Food AllRandomFood(List<Food> foodList)
         //{
