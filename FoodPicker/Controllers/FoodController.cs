@@ -15,7 +15,8 @@ namespace FoodPicker.Controllers
     {
         private readonly IFoodService foodService;
         private readonly IRestaurantService restaurantService;
-        public FoodController(IFoodService foodService,IRestaurantService restaurantService)
+
+        public FoodController(IFoodService foodService, IRestaurantService restaurantService)
         {
             this.foodService = foodService;
             this.restaurantService = restaurantService;
@@ -37,7 +38,7 @@ namespace FoodPicker.Controllers
         public ActionResult DeleteFood(int id)
         {
             foodService.Delete(id);
-          
+
 
             return RedirectToAction("Index", "Food");
         }
@@ -88,8 +89,8 @@ namespace FoodPicker.Controllers
                 string userId = User.Identity.GetUserId();
                 food.ApplicationUserId = userId;
 
-              foodService.Create(food); //Add
-               
+                foodService.Create(food); //Add
+
 
                 return RedirectToAction("Index", "Food"); //Go to Home
             }
@@ -140,12 +141,26 @@ namespace FoodPicker.Controllers
             return View(foodService.GetById(id.Value));
         }
         [HttpPost]
-        public ActionResult EditFood(Food food)
+        public ActionResult EditFood(Food food, HttpPostedFileBase ImageFile)
         {
+            if (ImageFile != null && ImageFile.ContentLength != 0)
+            {
+                var path = Server.MapPath("/Content/Uploads/");
+                var filename = ImageFile.FileName;
+                ImageFile.SaveAs(path + filename);
+                food.ImageURL = filename;
+
+                ViewBag.UploadedImage = ImageFile.FileName;
+            }
+            else
+            {
+                var oldImg = foodService.GetById(food.Id).ImageURL;
+                food.ImageURL = oldImg;
+            }
+
             if (ModelState.IsValid)
             {
                 foodService.Update(food);
-                
 
                 return RedirectToAction("Index", "Food");
             }
