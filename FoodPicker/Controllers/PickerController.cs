@@ -1,6 +1,8 @@
 ﻿using BLL;
 using Entity;
 using Microsoft.AspNet.Identity;
+using Service;
+using ServiceFood;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,10 @@ namespace FoodPicker.Controllers
 {
     public class PickerController : Controller
     {
-        private readonly UnitOfWork _uw;
-        public PickerController()
+        private readonly IFoodService foodService;
+        public PickerController(IFoodService foodService)
         {
-            _uw = new UnitOfWork();
+            this.foodService = foodService;
         }
 
         // GET: Picker
@@ -21,10 +23,10 @@ namespace FoodPicker.Controllers
         {
             bool es = User.Identity.IsAuthenticated;
 
-            List<Food> foodList = _uw.foodRep.GetAll();
+            List<Food> foodList = foodService.GetAll();
 
             string strUserId = User.Identity.GetUserId();
-            foodList = _uw.db.Foods.Where(x => x.ApplicationUserId == strUserId).ToList();
+            foodList = foodService.GetAll().Where(x => x.ApplicationUserId == strUserId).ToList();
 
             //List<Food> foodList = _uw.foodRep.GetAll();
             //ViewBag.RandomFood = _uw.foodRep.RandomFood();
@@ -35,10 +37,10 @@ namespace FoodPicker.Controllers
 
         public ActionResult AllRandom()
         {
-            List<Food> foodList = _uw.foodRep.GetAll();
+            List<Food> foodList = foodService.GetAll();
 
             string strUserId = User.Identity.GetUserId();
-            foodList = _uw.db.Foods.Where(x => x.ApplicationUserId == strUserId).ToList();
+            foodList = foodService.GetAll().Where(x => x.ApplicationUserId == strUserId).ToList();
 
             Random rnd = new Random();
             Food randomFood = foodList.ElementAt(rnd.Next(foodList.Count()));
@@ -51,7 +53,7 @@ namespace FoodPicker.Controllers
         public ActionResult HealthyRandom()
         {
             string strUserId = User.Identity.GetUserId();
-            List<Food> healthyFoodList = _uw.db.Foods.Where(x => x.IsHealty == true && x.ApplicationUserId == strUserId).ToList();
+            List<Food> healthyFoodList = foodService.GetAll().Where(x => x.IsHealty == true && x.ApplicationUserId == strUserId).ToList();
 
             Random rnd = new Random();
             Food randomHealtyFood = healthyFoodList.ElementAt(rnd.Next(healthyFoodList.Count()));

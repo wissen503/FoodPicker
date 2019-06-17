@@ -1,6 +1,8 @@
 ﻿using BLL;
 using Entity;
 using Microsoft.AspNet.Identity;
+using Service;
+using ServiceFood;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +13,12 @@ namespace FoodPicker.Controllers
 {
     public class FoodController : Controller
     {
-        private readonly UnitOfWork _uw;
-        public FoodController()
+        private readonly IFoodService foodService;
+        private readonly IRestaurantService restaurantService;
+        public FoodController(IFoodService foodService,IRestaurantService restaurantService)
         {
-            _uw = new UnitOfWork();
+            this.foodService = foodService;
+            this.restaurantService = restaurantService;
         }
 
 
@@ -22,18 +26,18 @@ namespace FoodPicker.Controllers
         {
             bool es = User.Identity.IsAuthenticated;
 
-            List<Food> foodList = _uw.foodRep.GetAll();
+            List<Food> foodList = foodService.GetAll();
 
             string strUserId = User.Identity.GetUserId();
-            foodList = _uw.db.Foods.Where(x => x.ApplicationUserId == strUserId).ToList();
+            foodList = foodService.GetAll().Where(x => x.ApplicationUserId == strUserId).ToList();
 
             return View(foodList);
         }
 
         public ActionResult DeleteFood(int id)
         {
-            _uw.foodRep.Delete(id);
-            _uw.Save();
+            foodService.Delete(id);
+          
 
             return RedirectToAction("Index", "Food");
         }
@@ -42,13 +46,13 @@ namespace FoodPicker.Controllers
         public ActionResult AddFood()
         {
             string strUserId = User.Identity.GetUserId();
-            if (/*_uw.restRep.GetAll().Count == 0 && */ _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).Count() == 0)
+            if (/*_uw.restRep.GetAll().Count == 0 && */ restaurantService.GetAll().Where(x => x.ApplicationUserId == strUserId).Count() == 0)
             {
                 return RedirectToAction("AddRestaurant", "Restaurant");
             }
 
             //IEnumerable<Restaurant> restaurant = _uw.restRep.GetAll();            
-            IEnumerable<Restaurant> restaurant = _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).ToList();
+            IEnumerable<Restaurant> restaurant = restaurantService.GetAll().Where(x => x.ApplicationUserId == strUserId).ToList();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {
                 Text = x.RestaurantName,
@@ -84,8 +88,8 @@ namespace FoodPicker.Controllers
                 string userId = User.Identity.GetUserId();
                 food.ApplicationUserId = userId;
 
-                _uw.foodRep.Create(food); //Add
-                _uw.Save();
+              foodService.Create(food); //Add
+               
 
                 return RedirectToAction("Index", "Food"); //Go to Home
             }
@@ -93,7 +97,7 @@ namespace FoodPicker.Controllers
             //We stil need DropDownList so we keep this here as the 
             //List<Restaurant> restaurant = _uw.restRep.GetAll();
             string strUserId = User.Identity.GetUserId();
-            IEnumerable<Restaurant> restaurant = _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).ToList();
+            IEnumerable<Restaurant> restaurant = restaurantService.GetAll().Where(x => x.ApplicationUserId == strUserId).ToList();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {
                 Text = x.RestaurantName,
@@ -117,7 +121,7 @@ namespace FoodPicker.Controllers
             if (!id.HasValue) //if int is null. We need to check this as we set id nullable
                 return HttpNotFound();
 
-            List<Restaurant> restaurant = _uw.restRep.GetAll();
+            List<Restaurant> restaurant = restaurantService.GetAll();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {
                 Text = x.RestaurantName,
@@ -133,20 +137,20 @@ namespace FoodPicker.Controllers
                     Value = (Convert.ToInt32(x)).ToString()
                 }), "Value", "Text");
 
-            return View(_uw.foodRep.GetById(id.Value));
+            return View(foodService.GetById(id.Value));
         }
         [HttpPost]
         public ActionResult EditFood(Food food)
         {
             if (ModelState.IsValid)
             {
-                _uw.foodRep.Update(food);
-                _uw.Save();
+                foodService.Update(food);
+                
 
                 return RedirectToAction("Index", "Food");
             }
 
-            List<Restaurant> restaurant = _uw.restRep.GetAll();
+            List<Restaurant> restaurant = restaurantService.GetAll();
             var restaurantList = restaurant.Select(x => new SelectListItem()
             {
                 Text = x.RestaurantName,

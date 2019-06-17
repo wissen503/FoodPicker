@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{7F98EB3A-C61D-463F-92FD-F7B0B6EBBA20}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entity", "Entity\Entity.csproj", "{4493D60C-475E-4E9A-AAFF-1C94675C978F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodPicker", "FoodPicker\FoodPicker.csproj", "{3E0111D5-2DFC-44C1-B72F-8FEEEBC971F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{F0B6F09F-FB11-4683-B5F4-22B6180D40CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3E0111D5-2DFC-44C1-B72F-8FEEEBC971F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E0111D5-2DFC-44C1-B72F-8FEEEBC971F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E0111D5-2DFC-44C1-B72F-8FEEEBC971F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0B6F09F-FB11-4683-B5F4-22B6180D40CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0B6F09F-FB11-4683-B5F4-22B6180D40CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0B6F09F-FB11-4683-B5F4-22B6180D40CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0B6F09F-FB11-4683-B5F4-22B6180D40CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

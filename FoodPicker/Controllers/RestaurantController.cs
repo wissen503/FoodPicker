@@ -1,6 +1,8 @@
 ﻿using BLL;
 using Entity;
 using Microsoft.AspNet.Identity;
+using Service;
+using ServiceFood;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,20 +11,20 @@ namespace FoodPicker.Controllers
 {
     public class RestaurantController : Controller
     {
-        private readonly UnitOfWork _uw;
-        public RestaurantController()
+        private readonly IRestaurantService restaurantService;
+        public RestaurantController(IRestaurantService restaurantService)
         {
-            _uw = new UnitOfWork();
+            this.restaurantService = restaurantService;
         }
 
         public ActionResult Index()
         {
             bool es = User.Identity.IsAuthenticated;
 
-            List<Restaurant> restaurantList = _uw.restRep.GetAll();
+            List<Restaurant> restaurantList = restaurantService.GetAll();
 
             string strUserId = User.Identity.GetUserId();
-            restaurantList = _uw.db.Restaurants.Where(x => x.ApplicationUserId == strUserId).ToList();
+            restaurantList = restaurantService.GetAll().Where(x => x.ApplicationUserId == strUserId).ToList();
 
             return View(restaurantList);
         }
@@ -40,8 +42,8 @@ namespace FoodPicker.Controllers
                 string userId = User.Identity.GetUserId();
                 restaurant.ApplicationUserId = userId;
 
-                _uw.restRep.Create(restaurant);
-                _uw.Save();
+                restaurantService.Create(restaurant);
+              
 
                 return RedirectToAction("Index", "Restaurant");
             }
@@ -55,8 +57,8 @@ namespace FoodPicker.Controllers
 
         public ActionResult DeleteRestaurant(int id)
         {
-            _uw.restRep.Delete(id);
-            _uw.Save();
+            restaurantService.Delete(id);
+          
 
             return RedirectToAction("Index", "Restaurant");
         }
@@ -66,15 +68,15 @@ namespace FoodPicker.Controllers
             if (!id.HasValue) //if int is null. We need to check this as we set id nullable
                 return HttpNotFound();
 
-            return View(_uw.restRep.GetById(id.Value));
+            return View(restaurantService.GetById(id.Value));
         }
         [HttpPost]
         public ActionResult EditRestaurant(Restaurant restaurant)
         {
             if (ModelState.IsValid)
             {
-                _uw.restRep.Update(restaurant);
-                _uw.Save();
+              restaurantService.Update(restaurant);
+             
 
                 return RedirectToAction("Index", "Restaurant");
             }

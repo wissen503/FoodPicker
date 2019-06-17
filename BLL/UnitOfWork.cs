@@ -10,15 +10,13 @@ namespace BLL
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public ApplicationDbContext db = new ApplicationDbContext();
-        public FoodRepository foodRep;
-        public BaseRepository<Restaurant> restRep;
-        public UnitOfWork()
+        private readonly ApplicationDbContext db;
+       
+        public UnitOfWork(ApplicationDbContext db)
         {
-            foodRep = new FoodRepository(db);
-            restRep = new BaseRepository<Restaurant>(db);
+            this.db = db;
         }
-        public void Save()
+            public void Save()
         {
             db.SaveChanges();
         }
