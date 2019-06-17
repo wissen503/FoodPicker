@@ -12,6 +12,7 @@
     <div class="widget-body">
         <form action="/Food/EditFood" method="post">
             <input name="Id" type="hidden" value="@Model.Id" />
+            <input name="ApplicationUserId" type="hidden" value="@Model.ApplicationUserId" />
             <div class="form-group row d-flex align-items-center mb-5">
                 <label for="FoodName" class="col-lg-4 form-control-label d-flex justify-content-lg-end">Food Name</label>
                 <div class="col-lg-5">
